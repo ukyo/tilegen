@@ -1,0 +1,30 @@
+body {
+  color: #eee;
+}
+
+.input-field * {
+  display: inline-block;
+  vertical-align: top;
+}
+
+label {
+  width: 150px;
+}
+
+input[type="range"] {
+  width: 150px;
+}
+
+input[type="number"] {
+  width: 60px;
+}
+
+.color {
+  width: 50px;
+}
+
+.inputs {
+  background-color: rgba(0,0,0,0.5);
+  display: inline-block;
+  padding: 5px;
+}
