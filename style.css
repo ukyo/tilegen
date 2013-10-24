@@ -12,7 +12,12 @@ body {
   text-align: right;
 }
 
-.radio-label {
+.input-field-radios {
+  padding: 0;
+  margin: 0;
+}
+
+.input-field-radios label {
   width: 80px;
 }
 
@@ -22,10 +27,6 @@ label {
 
 input[type="range"] {
   width: 150px;
-}
-
-input[type="number"] {
-  width: 60px;
 }
 
 .color {

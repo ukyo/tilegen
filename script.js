@@ -1,135 +1,71 @@
 angular
 .module('ui.tilegen', [])
-.directive('slider', function() {
+.value('callNgChange', function (scope, element, attrs) {
+  scope.$watch('ngModel', function () {
+    // なぜかngChangeが呼ばれないので手動で呼ぶ
+    scope.ngChange();
+  });
+})
+.directive('slider', function (callNgChange) {
   return {
     restrict: 'E',
-    require: 'ngModel',
-    compile: function () {
-      return function (scope, element, attrs, ngModel) {
-        var div, label, slider, sliderView, sliderViewText;
-
-        div = document.createElement('div');
-        div.classList.add('input-field');
-
-        label = document.createElement('label');
-        label.classList.add('input-field-label');
-        label.appendChild(document.createTextNode(attrs.label));
-
-        slider = document.createElement('input');
-        slider.type = 'range';
-        slider.name = attrs.ngModel;
-        slider.min = attrs.min;
-        slider.max = attrs.max;
-
-        sliderView = document.createElement('span');
-        sliderView.classList.add('slider-view');
-        sliderViewText = document.createTextNode('');
-        sliderView.appendChild(sliderViewText);
-
-        div.appendChild(label);
-        div.appendChild(slider);
-        div.appendChild(sliderView);
-
-        element.append(div);
-
-        ngModel.$render = function () {
-          slider.value = ngModel.$viewValue;
-          sliderViewText.nodeValue = ngModel.$viewValue;
-        };
-
-        slider.addEventListener('change', function () {
-          ngModel.$setViewValue(slider.value);
-          sliderViewText.nodeValue = ngModel.$viewValue;
-          scope.$apply();
-        });
-      }
-    }
+    scope: {
+      label: '@',
+      min: '@',
+      max: '@',
+      ngModel: '=',
+      ngChange: '&'
+    },
+    template:
+      '<div class="input-field">' +
+        '<label class="input-field-label">{{label}}</label>' +
+        '<input type="range" min="{{min}}" max="{{max}}" ng-model="ngModel">' +
+        '<span class="slider-view">{{ngModel}}</span>' +
+      '</div>',
+    link: callNgChange,
+    replace: true
   };
 })
-.directive('radios', function () {
+.directive('radios', function (callNgChange) {
   return {
     restrict: 'E',
-    require: 'ngModel',
-    compile: function () {
-      return function (scope, element, attrs, ngModel) {
-        var div, label, items;
-
-        div = document.createElement('div');
-        div.classList.add('input-field');
-
-        label = document.createElement('label');
-        label.classList.add('input-field-label');
-        label.appendChild(document.createTextNode(attrs.label));
-        div.appendChild(label);
-
-        items = scope[attrs.items];
-        Object.keys(items).forEach(function (key) {
-          var radio, item = items[key];
-
-          radio = document.createElement('input');
-          radio.type = 'radio';
-          radio.id = 'radios-' + key;
-          radio.dataset.key = key;
-          radio.name = attrs.ngModel;
-          radio.value = item.value;
-          
-          label = document.createElement('label');
-          label.classList.add('radio-label');
-          label.appendChild(document.createTextNode(key));
-          label.setAttribute('for', radio.id);
-
-          div.appendChild(radio);
-          div.appendChild(label);
-        });
-
-        element.append(div);
-
-        div.addEventListener('change', function (e) {
-          ngModel.$setViewValue(e.target.dataset.key);
-          scope.$apply();
-        });
-
-        ngModel.$render = function () {
-          var el = document.querySelector('[data-key="' + ngModel.$viewValue + '"]');
-          el.checked = true;
-        }
-      };
-    }
+    scope: {
+      label: '@',
+      radios: '=',
+      name: '@',
+      ngModel: '=',
+      ngChange: '&'
+    },
+    template:
+      '<div class="input-field">' +
+        '<label class="input-field-label">{{label}}</label>' +
+        '<ul class="input-field-radios">' +
+          '<li ng-repeat="(i, radio) in radios">' +
+            '<input type="radio" name="{{name}}" id="radio-{{name}}-{{radio.label}}" ' +
+            'ng-model="$parent.ngModel" value="{{i}}">' +
+            '<label for="radio-{{name}}-{{radio.label}}">{{radio.label}}</label>' +
+          '</li>' +
+        '</ul>' +
+      '</div>',
+    link: callNgChange,
+    replace: true
   }
 })
-.directive('colorpicker', function () {
+.directive('colorpicker', function (callNgChange) {
   return {
     restrict: 'E',
-    require: 'ngModel',
-    compile: function () {
-      return function (scope, element, attrs, ngModel) {
-        var div, label, colorPicker;
-
-        div = document.createElement('div');
-        div.classList.add('input-field');
-
-        label = document.createElement('label');
-        label.classList.add('input-field-label');
-        label.appendChild(document.createTextNode(attrs.label));
-        div.appendChild(label);
-
-        colorPicker = document.createElement('input');
-        colorPicker.type = 'color';
-        colorPicker.name = attrs.ngModel;
-        div.appendChild(colorPicker);
-
-        element.append(div);
-
-        ngModel.$render = function () {
-          colorPicker.value = ngModel.$viewValue;
-        };
-
-        colorPicker.addEventListener('change', function () {
-          ngModel.$setViewValue(colorPicker.value);
-          scope.$apply();
-        });
-      };
-    }
+    scope: {
+      label: '@',
+      ngModel: '=',
+      ngChange: '&'
+    },
+    template:
+      '<div class="input-field">' +
+        '<label class="input-field-label">{{label}}</label>' +
+        '<input type="color" ng-model="ngModel">' +
+      '</div>',
+    link: callNgChange,
+    replace: true
   }
 });
 
@@ -141,18 +77,13 @@ angular
   $scope.size = 4;
   $scope.margin = 1;
   $scope.bgColor = '#ffffff';
-  $scope.color = 'black';
   
-  $scope.colors = {
-    white: {
-      label: 'white',
-      value: 255
-    },
-    black: {
-      label: 'black',
-      value: 0
-    }
-  };
+  $scope.colors = [
+    {label: 'white', value: 255},
+    {label: 'black', value: 0}
+  ];
+
+  $scope.color = 1;
 
   $scope.download = function () {
     location.href = canvas.toDataURL();
