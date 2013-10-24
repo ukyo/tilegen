@@ -4,35 +4,39 @@
   <title>random tile generator</title>
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body ng-app>
+<body ng-app="tilegen">
   <div ng-controller="Ctrl" class="inputs">
-    <div class="input-field">
-      <label>opacity</label>
-      <input type="range" name="opacity" min="0" max="255" ng-model="opacity">
-      <input type="number" min="0" max="255" ng-model="opacity">
+    <slider
+      ng-model="opacity"
+      ng-change="setTiles()"
+      label="opacity"
+      min="0"
+      max="255"></slider>
+    <slider
+      ng-model="size"
+      ng-change="setTiles()"
+      label="size"
+      min="4"
+      max="16"></slider>
+    <slider
+      ng-model="margin"
+      ng-change="setTiles()"
+      label="margin"
+      min="1"
+      max="8"></slider>
+    <radios
+      ng-model="color"
+      ng-change="setTiles()"
+      label="tile color"
+      items="colors"></radios>
+    <colorpicker
+      ng-model="bgColor"
+      ng-change="changeBgColor()"
+      label="bg color"></colorpicker>
+    <div>
+      <button ng-click="generateTiles();setTiles();">generate tile</button>
+      <button ng-click="download()">Download</button>
     </div>
-    <div class="input-field">
-      <label>size</label>
-      <input type="range" name="size" min="4" max="16" ng-model="size">
-      <input type="number" min="4" ng-model="size">
-    </div>
-    <div class="input-field">
-      <label>margin</label>
-      <input type="range" name="margin" min="1" max="8" ng-model="margin">
-      <input type="number" min="1" ng-model="margin">
-    </div>
-    <div class="input-field">
-      <label>tile color</label>
-      <input id="white" type="radio" name="color" ng-model="color" value="255" ng-change="setTile()">
-      <label class="color" for="white">white</label>
-      <input id="black" type="radio" name="color" ng-model="color" value="0" ng-change="setTile()" checked>
-      <label class="color" for="black">black</label>
-    </div>
-    <div class="input-field">
-      <label>background color</label>
-      <input type="color" ng-model="bgColor" ng-change="changeBgColor()">
-    </div>
-    <div><button ng-click="generateTile();setTile();">generate tile</button><button ng-click="download()">Download</button></div>
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
   <script src="script.js"></script>

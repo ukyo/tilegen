@@ -7,8 +7,17 @@ body {
   vertical-align: top;
 }
 
+.input-field span {
+  width: 30px;
+  text-align: right;
+}
+
+.radio-label {
+  width: 80px;
+}
+
 label {
-  width: 150px;
+  width: 120px;
 }
 
 input[type="range"] {
@@ -24,7 +33,9 @@ input[type="number"] {
 }
 
 .inputs {
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.7);
   display: inline-block;
-  padding: 5px;
+  padding: 10px;
+  border-radius: 2px;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.3);
 }
